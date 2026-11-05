@@ -1,0 +1,17 @@
+{
+  "name": "api-node-postgres",
+  "version": "1.0.0",
+  "description": "API REST CRUD de productos con Express 5 y PostgreSQL",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
+  }
+}
