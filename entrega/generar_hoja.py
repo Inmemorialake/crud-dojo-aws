@@ -59,7 +59,9 @@ st = {
 def link(url: str) -> str:
     if url.startswith("http"):
         return f'<link href="{url}" color="#1F5FBF"><u>{url}</u></link>'
-    return f'<font color="#B00020">{url}</font>'
+    if url == "(pendiente)":
+        return f'<font color="#B00020">{url}</font>'
+    return url
 
 
 def tabla(filas):
