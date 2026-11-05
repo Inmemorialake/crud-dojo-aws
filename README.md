@@ -7,12 +7,6 @@ Misma API REST de **productos** (CRUD completo) implementada dos veces, con leng
 | [`api-node-postgres/`](api-node-postgres) | JavaScript — Node.js 22 + Express 5 | PostgreSQL 17 (relacional, SQL) | `3000` |
 | [`api-python-mongo/`](api-python-mongo) | Python 3.13 — FastAPI | MongoDB 8 (documental, NoSQL) | `8000` |
 
-## 🎥 Video
-
-**Enlace del video (YouTube):** _pendiente — se publicará aquí._
-
-El video documenta el despliegue local y en AWS EC2 de ambas implementaciones, y cierra con una reflexión sobre facilidades, dificultades y aprendizajes del proceso.
-
 Ambas exponen **exactamente el mismo contrato JSON**, así que el mismo script de pruebas (`scripts/probar-crud.sh`) sirve para las dos.
 
 ```
@@ -31,6 +25,14 @@ crud-dojo-aws/
 │   └── ec2-setup.sh        # instala Docker + Compose + swap en la EC2
 └── docs/GUION_VIDEO.md     # guion del video y puntos para la reflexión
 ```
+
+---
+
+## 🎥 Video
+
+**Enlace del video (YouTube):** _pendiente — se publicará aquí._
+
+El video documenta el despliegue local y en AWS EC2 de ambas implementaciones, y cierra con una reflexión sobre facilidades, dificultades y aprendizajes del proceso.
 
 ---
 
@@ -140,7 +142,7 @@ ssh -i dojo-key.pem ubuntu@<IP_PUBLICA>      # en Amazon Linux el usuario es ec2
 ### 3. Instalar Docker y clonar el repositorio
 
 ```bash
-git clone https://github.com/<tu-usuario>/crud-dojo-aws.git
+git clone https://github.com/Inmemorialake/crud-dojo-aws.git
 cd crud-dojo-aws
 sudo ./scripts/ec2-setup.sh       # Docker Engine + Compose + 2 GB de swap
 exit                              # salir y volver a entrar para usar docker sin sudo
