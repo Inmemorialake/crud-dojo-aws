@@ -6,7 +6,8 @@ Uso:
         --repo  https://github.com/<usuario>/crud-dojo-aws \
         --video https://youtu.be/<id> \
         --curso "Infraestructuras Paralelas y Distribuidas (750023C)" \
-        --docente "Manuel Alejandro Pastrana, PhD"
+        --docente "Manuel Alejandro Pastrana, PhD" \
+        --integrante "Nombre Apellido|Código" --integrante "Otro Nombre|Código"
 """
 import argparse
 from datetime import date
@@ -25,12 +26,16 @@ p.add_argument("--repo", default="(pendiente)")
 p.add_argument("--video", default="(pendiente)")
 p.add_argument("--curso", default="Infraestructuras Paralelas y Distribuidas (750023C)")
 p.add_argument("--docente", default="Manuel Alejandro Pastrana, PhD")
-p.add_argument("--nombre", default="Andrés Gerardo González Rosero")
-p.add_argument("--codigo", default="202416541")
-p.add_argument("--correo", default="andresgerardogonzales@gmail.com")
+# Repetible: --integrante "Nombre completo|Código"
+p.add_argument("--integrante", action="append", default=None)
+p.add_argument("--correo", default="andresgerardogonzales@gmail.com", help="correo de contacto")
 p.add_argument("--programa", default="Ingeniería de Sistemas")
-p.add_argument("--salida", default="entrega/Entrega_Dojo_AWS_GonzalezRosero.pdf")
+p.add_argument("--salida", default="entrega/Entrega_Dojo_AWS.pdf")
 a = p.parse_args()
+integrantes = [i.split("|", 1) for i in (a.integrante or [
+    "Andrés Gerardo González Rosero|202416541",
+    "Freddy Alexander Melo Buitrago|202125498",
+])]
 
 hoy = date.today()
 fecha = f"{hoy.day} de {MESES[hoy.month - 1]} de {hoy.year}"
@@ -64,6 +69,20 @@ def link(url: str) -> str:
     return url
 
 
+def tabla_integrantes(filas):
+    hdr = ParagraphStyle("hdr", parent=st["k"], textColor=colors.white)
+    data = [[Paragraph("Nombre", hdr), Paragraph("Código", hdr)]]
+    data += [[Paragraph(n.strip(), st["v"]), Paragraph(c.strip(), st["v"])] for n, c in filas]
+    t = Table(data, colWidths=[12.3 * cm, 4.2 * cm])
+    t.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), AZUL),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.5, LINEA),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+    ]))
+    return t
+
+
 def tabla(filas):
     t = Table([[Paragraph(k, st["k"]), Paragraph(v, st["v"])] for k, v in filas],
               colWidths=[4.2 * cm, 12.3 * cm])
@@ -79,7 +98,7 @@ def tabla(filas):
 doc = SimpleDocTemplate(a.salida, pagesize=letter, leftMargin=2.5 * cm, rightMargin=2.5 * cm,
                         topMargin=2.2 * cm, bottomMargin=2.2 * cm,
                         title="Entrega — Dojo AWS: API REST CRUD en contenedores",
-                        author=a.nombre)
+                        author=", ".join(n for n, _ in integrantes))
 
 story = [
     Paragraph("UNIVERSIDAD DEL VALLE<br/>Escuela de Ingeniería de Sistemas y Computación", st["inst"]),
@@ -88,12 +107,12 @@ story = [
     Paragraph("Despliegue local con Docker y en AWS EC2 — dos implementaciones", st["sub"]),
     Spacer(1, 0.8 * cm),
 
-    Paragraph("Datos del estudiante", st["h"]),
+    Paragraph("Integrantes", st["h"]),
+    tabla_integrantes(integrantes),
+    Spacer(1, 0.4 * cm),
     tabla([
-        ("Nombre", a.nombre),
-        ("Código", a.codigo),
         ("Programa", a.programa),
-        ("Correo", a.correo),
+        ("Contacto", a.correo),
         ("Curso", a.curso),
         ("Docente", a.docente),
         ("Fecha", fecha),
