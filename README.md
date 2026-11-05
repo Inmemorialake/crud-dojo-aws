@@ -211,4 +211,12 @@ pytest -q
 
 ---
 
-**Autor:** Andrés Gerardo González Rosero — Ingeniería de Sistemas, Universidad del Valle
+## Integrantes
+
+| Nombre | Código | GitHub |
+|---|---|---|
+| Andrés Gerardo González Rosero | 202416541 | [@Inmemorialake](https://github.com/Inmemorialake) |
+| Freddy Alexander Melo Buitrago | 202125498 | [@FoxArtMotion](https://github.com/FoxArtMotion) |
+| Sarahy Gisselle Caicedo Betancourth | 2610315 | — |
+
+Ingeniería de Sistemas — Universidad del Valle
