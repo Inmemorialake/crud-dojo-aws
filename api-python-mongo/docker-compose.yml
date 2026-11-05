@@ -1,0 +1,33 @@
+name: dojo-python-mongo
+
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-dojo}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-dojo}
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    # Sin `ports`: Mongo solo es accesible desde la red interna de compose.
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      # `mongo` es el nombre del servicio → DNS interno de Docker.
+      MONGO_URI: mongodb://${MONGO_USER:-dojo}:${MONGO_PASSWORD:-dojo}@mongo:27017/?authSource=admin
+      MONGO_DB: productos_db
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+volumes:
+  mongo_data:
