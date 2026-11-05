@@ -1,0 +1,38 @@
+name: dojo-node-postgres
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-dojo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dojo}
+      POSTGRES_DB: ${DB_NAME:-productos_db}
+    volumes:
+      - pg_data:/var/lib/postgresql/data   # los datos sobreviven a `docker compose down`
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    # Sin `ports`: la BD NO queda expuesta al host ni a internet,
+    # solo es alcanzable por la API a través de la red interna de compose.
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy   # espera a que Postgres acepte conexiones
+    environment:
+      PORT: 3000
+      DB_HOST: db                    # nombre del servicio = hostname en la red de compose
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-dojo}
+      DB_PASSWORD: ${DB_PASSWORD:-dojo}
+      DB_NAME: ${DB_NAME:-productos_db}
+    ports:
+      - "${API_PORT:-3000}:3000"
+
+volumes:
+  pg_data:
